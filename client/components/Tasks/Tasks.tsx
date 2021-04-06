@@ -1,30 +1,31 @@
 import { GetStaticProps } from 'next'
 import TaskItem from './Items/TaskItem'
 import { Task } from '../../interfaces'
-import { sampleTaskData } from 'utils/sample-data'
-import { useEffect } from 'react'
+import { sampleTaskData } from '../../utils/sample-data'
 
 type Props = {
-  tasks: Task[]
+  tasks?: Array<Task>
 }
 
-const Tasks: JSX.Element<Props> = ({ tasks }) => {
-  useEffect(() => {
-    console.log(tasks)
-  }, [])
+const Tasks = ({ tasks }: Props) => {
+  console.log(tasks)
+  if (!tasks) {
+    return null
+  }
+
   return (
     <section className="flex flex-wrap justify-around w-full">
-      {/* {tasks.map((task) => (
+      {tasks.map((task) => (
         <li key={task.id}>
           <TaskItem task={task} />
         </li>
-      ))} */}
+      ))}
     </section>
   )
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const tasks: Task[] = sampleTaskData
+  const tasks: Array<Task> = sampleTaskData
   return { props: { tasks } }
 }
 
