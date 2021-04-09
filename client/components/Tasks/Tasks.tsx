@@ -1,32 +1,26 @@
-import { GetStaticProps } from 'next'
 import TaskItem from './Items/TaskItem'
 import { Task } from '../../interfaces'
-import { sampleTaskData } from '../../utils/sample-data'
 
 type Props = {
   tasks?: Array<Task>
 }
 
-const Tasks = ({ tasks }: Props) => {
-  console.log(tasks)
+const Tasks: React.FC<Props> = ({ tasks }: Props) => {
   if (!tasks) {
     return null
   }
 
   return (
-    <section className="flex flex-wrap justify-around w-full">
-      {tasks.map((task) => (
-        <li key={task.id}>
-          <TaskItem task={task} />
-        </li>
-      ))}
+    <section className="flex flex-wrap justify-center w-full">
+      <ul className="flex flex-wrap justify-start w-full">
+        {tasks.map((task) => (
+          <li key={task.id}>
+            <TaskItem task={task} />
+          </li>
+        ))}
+      </ul>
     </section>
   )
-}
-
-export const getStaticProps: GetStaticProps = async () => {
-  const tasks: Array<Task> = sampleTaskData
-  return { props: { tasks } }
 }
 
 export default Tasks

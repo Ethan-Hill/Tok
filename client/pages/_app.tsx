@@ -1,17 +1,16 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+import type { AppProps } from 'next/app'
+import { StoreProvider } from 'easy-peasy'
+import store from '../store'
 import 'tailwindcss/tailwind.css'
 import '@styles/global.css'
 
-import App from 'next/app'
-import type { AppProps, AppContext } from 'next/app'
-
-function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+function App({ Component, pageProps }: AppProps) {
+  return (
+    <StoreProvider store={store}>
+      <Component {...pageProps} />
+    </StoreProvider>
+  )
 }
 
-MyApp.getInitialProps = async (appContext: AppContext) => {
-  const appProps = await App.getInitialProps(appContext)
-
-  return { ...appProps }
-}
-
-export default MyApp
+export default App
