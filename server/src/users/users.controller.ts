@@ -9,9 +9,11 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 import { User } from './schemas/user.schema';
+import { Error } from './schemas/error.schema';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -49,6 +51,26 @@ export class UsersController {
       createUserDto.username,
       createUserDto.password,
     );
+  }
+
+  @Post('/login')
+  async loginUser(@Body() loginUserDto: LoginUserDto): Promise<User | Error> {
+    const checkedUser = await this.usersService.loginUser(
+      loginUserDto.email,
+      loginUserDto.password,
+    );
+
+    if (!checkedUser) {
+      throw new HttpException(
+        {
+          status: HttpStatus.UNAUTHORIZED,
+          message: 'Email or password incorrect',
+          error: 'Unauthorized',
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+    return checkedUser;
   }
 
   @Patch(':userId')

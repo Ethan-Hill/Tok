@@ -4,6 +4,7 @@ import bcrypt = require('bcrypt');
 import { UpdateUserDto } from './dto/update-user.dto';
 
 import { User } from './schemas/user.schema';
+import { Error } from './schemas/error.schema';
 import { UsersRepository } from './users.repository';
 
 @Injectable()
@@ -22,10 +23,27 @@ export class UsersService {
     return this.usersRepository.findOne({ email });
   }
 
+  async loginUser(email: string, password: string): Promise<User | Error> {
+    const user = await this.usersRepository.findOne({ email });
+
+    if (user) {
+      const cmp = await bcrypt.compare(password, user.password);
+      console.log(cmp);
+
+      if (cmp) {
+        return user;
+      } else {
+        return { message: 'Wrong email or password' };
+      }
+    } else {
+      return { message: 'Wrong email or password' };
+    }
+  }
+
   async createUser(
     email: string,
-    password: string,
     username: string,
+    password: string,
   ): Promise<User> {
     const encryptedPassword: string = await bcrypt.hash(password, 10);
 
